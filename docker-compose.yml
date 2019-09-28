@@ -83,8 +83,9 @@ services:
     restart: always
 
 networks:
-  completecase_default:
-    external: true
+  default:
+    external:
+      name: completecase_default
 
 volumes:
   elasticsearch:
