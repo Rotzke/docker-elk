@@ -20,8 +20,6 @@ services:
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       ELASTIC_PASSWORD: changeme
-    networks:
-      - elk
 
   logstash:
     build:
@@ -42,8 +40,6 @@ services:
       - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - elk
     depends_on:
       - elasticsearch
 
@@ -59,8 +55,6 @@ services:
         read_only: true
     ports:
       - "5601:5601"
-    networks:
-      - elk
     depends_on:
       - elasticsearch
 
@@ -73,15 +67,24 @@ services:
       - ./heartbeat/config/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
     environment:
       - output.elasticsearch.hosts=["elasticsearch:9200"]
-    networks:
-      - elk
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  apm-server:
+    build:
+      context: ./apm-server
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./apm-server/config/apm-server.yml:/usr/share/apm-server/apm-server.yml:ro
     depends_on:
       - elasticsearch
     restart: always
 
 networks:
-  elk:
-    driver: bridge
+  completecase_default:
+    external: true
 
 volumes:
   elasticsearch:
