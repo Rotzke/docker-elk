@@ -9,4 +9,5 @@ cluster.routing.allocation.disk.threshold_enabled: false
 ## see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
 #
 discovery.type: single-node
+xpack.security.enabled: false
 xpack.license.self_generated.type: basic
